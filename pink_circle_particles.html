@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body style="overflow: hidden; padding: 0; margin: 0; background-color: #F5CAC3;">
+    <div class="frosted-glass">Particles</div>
+    <canvas><canvas>
+    <script>
+      const canvas = document.querySelector('canvas');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const c = canvas.getContext('2d');
+
+
+      let mouse = {
+        x: undefined,
+        y: undefined
+      }
+      window.addEventListener('mousemove',
+        function(event) {
+          mouse.x = event.x
+          mouse.y = event.y
+      })
+      window.addEventListener('resize', function() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        init()
+      })
+
+      let colorArray = [
+        '#F6BD60',
+        '#F7EDE2',
+        '#84A59D',
+        '#F28482'
+      ]
+
+      function Circle(x, y, offset, arc, dx, dy, radius, min) {
+        this.x = x
+        this.y = y
+        this.offset = offset
+        this.arc = arc
+        this.dx = dx
+        this.dy = dy
+        this.radius = radius
+        this.min = min
+        this.color = colorArray[Math.floor(Math.random() * colorArray.length)]
+
+
+        this.draw = function() {
+          c.beginPath();
+          c.arc(this.x,this.y,this.radius,this.arc, Math.PI * 2, false);
+          c.fillStyle = this.color
+          c.fill()
+        }
+        this.update = function() {
+          this.draw()
+          if (this.x + this.radius > innerWidth || this.x - this.radius < 0) {
+            this.dx = -this.dx
+          }
+          if (this.y + this.radius > innerHeight || this.y - this.radius < 0) {
+            this.dy = -this.dy
+          }
+          this.x += this.dx
+          this.y += this.dy;
+
+          // interactivity
+          this.range = 50
+          this.max = 50
+          if (mouse.x - this.x < this.range && mouse.x - this.x > -this.range
+            && mouse.y - this.y < this.range && mouse.y - this.y > -this.range
+            && this.radius < this.max ) {
+            this.radius += 1
+          } else if (this.radius > this.min) {
+            this.radius -= 1
+          }
+
+        }
+      }
+
+
+      let circleArray = []
+
+      function init() {
+        circleArray = []
+        for (var i = 0; i < 200 ; i++) {
+          let radius = Math.random() * 7 + 8
+          let x = Math.random() * (innerWidth - radius * 2) + radius
+          let y = Math.random() * (innerHeight - radius * 2) + radius
+          let offset = Math.random() * 40
+          let arc =  0
+          let dx = (Math.random() * - 0.5) * 1
+          let dy = (Math.random() * - 0.5) * 1
+          circleArray.push(new Circle(x,y,offset,arc,dx,dy,radius,radius))
+        }
+      }
+      init()
+
+
+
+
+      function animate() {
+        requestAnimationFrame(animate);
+        c.clearRect(0,0, innerWidth, innerHeight)
+        for (var i = 0; i < circleArray.length; i++) {
+          circleArray[i].update()
+        }
+
+      }
+      animate()
+
+
+      // // line
+      // c.beginPath();
+      // c.moveTo(50, 300);
+      // c.lineTo(300, 100);
+      // c.strokeStyle = "#000000"
+      // c.stroke()
+      //
+      // for (let i = 0; i < 420; i++) {
+      //   var x = Math.random() * innerWidth
+      //   var y = Math.random() * innerHeight
+      //   c.beginPath();
+      //   for (let j = 0; j < 30; j++) {
+      //     // arc
+      //     // c.beginPath();
+      //     c.arc(x + j,y + j, 30, 00, Math.PI * 2, false)
+      //     c.strokeStyle = `rgb(${x+j},${x-j},${y+j})`
+      //     c.stroke()
+      //   }
+      //   for (let j = 0; j < 30; j++) {
+      //     // arc
+      //     c.fillStyle = `rgb(${x-j},${x+j},${y-j})`
+      //     c.fillRect(x - j + 20,y - j + 20, 30, 30)
+      //
+      //   }
+      // }
+
+    </script>
+
+    <style media="screen">
+
+.frosted-glass {
+	width: 50vw;
+	height: 30vh;
+	position: relative;
+	z-index: 1;
+	background: inherit;
+	overflow: hidden;
+	display: grid;
+	justify-content: center;
+	align-items: center;
+	font-size: 4rem;
+	font-weight: bold;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  opacity: 0.9;
+  transform: translate(-50%,-50%)
+}
+
+.frosted-glass:before {
+	content: "";
+	position: absolute;
+	background: inherit;
+	z-index: -1;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	box-shadow: inset 0 0 2000px rgba(255, 255, 255, .2);
+	filter: blur(10px);
+	margin: -20px;
+}
+    </style>
+  </body>
+</html>
