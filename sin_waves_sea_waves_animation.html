@@ -41,7 +41,7 @@
           for (let x = 0; x < canvas.width; x++) {
             let y = this.wave.y - 100 +  offset + (this.wave.a * Math.sin(this.wave.b * -Math.sin(increment) * x + increment))
             c.fillStyle = color
-            c.fillRect(x,y, 1, 700)
+            c.fillRect(x,y, 1, 1200)
             c.lineTo(x, y)
           }
           c.strokeStyle = this.wave.color
